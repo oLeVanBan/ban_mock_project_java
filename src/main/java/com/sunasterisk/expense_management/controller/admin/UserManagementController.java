@@ -1,7 +1,9 @@
 package com.sunasterisk.expense_management.controller.admin;
 
 import com.sunasterisk.expense_management.dto.UserDto;
+import com.sunasterisk.expense_management.service.CsvExportService;
 import com.sunasterisk.expense_management.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -22,6 +24,7 @@ public class UserManagementController {
 
     private final UserService userService;
     private final MessageSource messageSource;
+    private final CsvExportService csvExportService;
 
     /**
      * List all users
@@ -150,5 +153,17 @@ public class UserManagementController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/admin/users";
+    }
+
+    /**
+     * Export users to CSV
+     */
+    @GetMapping("/users/export")
+    public void exportUsers(HttpServletResponse response) {
+        try {
+            csvExportService.exportUsers(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to export users: " + e.getMessage(), e);
+        }
     }
 }

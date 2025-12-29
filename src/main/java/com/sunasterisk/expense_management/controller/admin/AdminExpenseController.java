@@ -6,6 +6,8 @@ import com.sunasterisk.expense_management.dto.expense.ExpenseRequest;
 import com.sunasterisk.expense_management.dto.expense.ExpenseResponse;
 import com.sunasterisk.expense_management.service.admin.AdminExpenseService;
 import com.sunasterisk.expense_management.service.CategoryService;
+import com.sunasterisk.expense_management.service.CsvExportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;
@@ -25,13 +27,16 @@ public class AdminExpenseController extends BaseAdminController {
 
     private final AdminExpenseService adminExpenseService;
     private final CategoryService categoryService;
+    private final CsvExportService csvExportService;
 
     public AdminExpenseController(AdminExpenseService adminExpenseService,
                                   CategoryService categoryService,
+                                  CsvExportService csvExportService,
                                   MessageSource messageSource) {
         super(messageSource);
         this.adminExpenseService = adminExpenseService;
         this.categoryService = categoryService;
+        this.csvExportService = csvExportService;
     }
 
     @GetMapping("/expenses")
@@ -42,7 +47,7 @@ public class AdminExpenseController extends BaseAdminController {
                         @RequestParam(required = false) String startDate,
                         @RequestParam(required = false) String endDate,
                         @RequestParam(defaultValue = "0") Integer page,
-                        @RequestParam(defaultValue = "1") Integer size) {
+                        @RequestParam(defaultValue = "20") Integer size) {
         AdminExpenseFilterRequest.AdminExpenseFilterRequestBuilder filterBuilder = AdminExpenseFilterRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -149,5 +154,17 @@ public class AdminExpenseController extends BaseAdminController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return redirectToIndex(MODULE);
+    }
+
+    /**
+     * Export expenses to CSV
+     */
+    @GetMapping("/expenses/export")
+    public void exportExpenses(HttpServletResponse response) {
+        try {
+            csvExportService.exportExpenses(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to export expenses: " + e.getMessage(), e);
+        }
     }
 }

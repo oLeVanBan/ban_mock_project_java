@@ -6,6 +6,8 @@ import com.sunasterisk.expense_management.dto.income.IncomeRequest;
 import com.sunasterisk.expense_management.dto.income.IncomeResponse;
 import com.sunasterisk.expense_management.service.admin.AdminIncomeService;
 import com.sunasterisk.expense_management.service.CategoryService;
+import com.sunasterisk.expense_management.service.CsvExportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;
@@ -25,13 +27,16 @@ public class AdminIncomeController extends BaseAdminController {
 
     private final CategoryService categoryService;
     private final AdminIncomeService adminIncomeService;
+    private final CsvExportService csvExportService;
 
     public AdminIncomeController(CategoryService categoryService,
                                  AdminIncomeService adminIncomeService,
+                                 CsvExportService csvExportService,
                                  MessageSource messageSource) {
         super(messageSource);
         this.categoryService = categoryService;
         this.adminIncomeService = adminIncomeService;
+        this.csvExportService = csvExportService;
     }
 
     @GetMapping("/incomes")
@@ -42,7 +47,7 @@ public class AdminIncomeController extends BaseAdminController {
                         @RequestParam(required = false) String startDate,
                         @RequestParam(required = false) String endDate,
                         @RequestParam(defaultValue = "0") Integer page,
-                        @RequestParam(defaultValue = "1") Integer size) {
+                        @RequestParam(defaultValue = "20") Integer size) {
         AdminIncomeFilterRequest.AdminIncomeFilterRequestBuilder filterBuilder = AdminIncomeFilterRequest.builder()
                 .name(name)
                 .userId(userId)
@@ -148,5 +153,17 @@ public class AdminIncomeController extends BaseAdminController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return redirectToIndex(MODULE);
+    }
+
+    /**
+     * Export incomes to CSV
+     */
+    @GetMapping("/incomes/export")
+    public void exportIncomes(HttpServletResponse response) {
+        try {
+            csvExportService.exportIncomes(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to export incomes: " + e.getMessage(), e);
+        }
     }
 }

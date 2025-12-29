@@ -11,6 +11,9 @@
                     <h1 class="m-0" th:text="#{admin.user.management.title}">Users</h1>
                 </div>
                 <div class="col-sm-6 text-right">
+                    <a href="/admin/users/export" class="btn btn-success mr-2">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </a>
                     <a href="/admin/users/new" class="btn btn-primary" th:text="#{admin.user.management.action.create}">Create User</a>
                 </div>
             </div>

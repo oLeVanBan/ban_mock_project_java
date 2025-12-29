@@ -296,3 +296,58 @@ label:
   pagination:
     previous: Trước
     next: Sau
+
+# CSV Export Headers
+csv:
+  user:
+    id: Mã người dùng
+    name: Tên
+    email: Email
+    phone: Số điện thoại
+    role: Vai trò
+    active: Hoạt động
+    total:
+      expenses: Tổng chi tiêu
+      incomes: Tổng thu nhập
+    balance: Số dư
+    created:
+      at: Ngày tạo
+  expense:
+    id: Mã chi tiêu
+    name: Tên
+    amount: Số tiền
+    date: Ngày
+    category: Danh mục
+    note: Ghi chú
+    user: Người dùng
+    created:
+      at: Ngày tạo
+  income:
+    id: Mã thu nhập
+    name: Tên
+    amount: Số tiền
+    date: Ngày
+    category: Danh mục
+    note: Ghi chú
+    user: Người dùng
+    created:
+      at: Ngày tạo
+  category:
+    id: Mã danh mục
+    name: Tên
+    description: Mô tả
+    type: Loại
+    icon: Biểu tượng
+    created:
+      at: Ngày tạo
+  budget:
+    id: Mã ngân sách
+    name: Tên
+    amount: Số tiền
+    spent: Đã chi
+    remaining: Còn lại
+    month: Tháng
+    category: Danh mục
+    user: Người dùng
+    created:
+      at: Ngày tạo

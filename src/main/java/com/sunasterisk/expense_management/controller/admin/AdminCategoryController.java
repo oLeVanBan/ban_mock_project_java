@@ -6,6 +6,8 @@ import com.sunasterisk.expense_management.dto.CategoryDto;
 import com.sunasterisk.expense_management.dto.category.CategoryRequest;
 import com.sunasterisk.expense_management.dto.category.CategoryResponse;
 import com.sunasterisk.expense_management.service.CategoryService;
+import com.sunasterisk.expense_management.service.CsvExportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -21,10 +23,14 @@ public class AdminCategoryController extends BaseAdminController {
     private static final String MODULE = "categories";
 
     private final CategoryService categoryService;
+    private final CsvExportService csvExportService;
 
-    public AdminCategoryController(CategoryService categoryService, MessageSource messageSource) {
+    public AdminCategoryController(CategoryService categoryService,
+                                   CsvExportService csvExportService,
+                                   MessageSource messageSource) {
         super(messageSource);
         this.categoryService = categoryService;
+        this.csvExportService = csvExportService;
     }
 
     @GetMapping("/categories")
@@ -152,5 +158,17 @@ public class AdminCategoryController extends BaseAdminController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return redirectToIndex(MODULE);
+    }
+
+    /**
+     * Export categories to CSV
+     */
+    @GetMapping("/categories/export")
+    public void exportCategories(HttpServletResponse response) {
+        try {
+            csvExportService.exportCategories(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to export categories: " + e.getMessage(), e);
+        }
     }
 }

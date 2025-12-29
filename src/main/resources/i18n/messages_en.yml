@@ -297,3 +297,58 @@ label:
   pagination:
     previous: Previous
     next: Next
+
+# CSV Export Headers
+csv:
+  user:
+    id: User ID
+    name: Name
+    email: Email
+    phone: Phone
+    role: Role
+    active: Active
+    total:
+      expenses: Total Expenses
+      incomes: Total Incomes
+    balance: Balance
+    created:
+      at: Created At
+  expense:
+    id: Expense ID
+    name: Name
+    amount: Amount
+    date: Date
+    category: Category
+    note: Note
+    user: User
+    created:
+      at: Created At
+  income:
+    id: Income ID
+    name: Name
+    amount: Amount
+    date: Date
+    category: Category
+    note: Note
+    user: User
+    created:
+      at: Created At
+  category:
+    id: Category ID
+    name: Name
+    description: Description
+    type: Type
+    icon: Icon
+    created:
+      at: Created At
+  budget:
+    id: Budget ID
+    name: Name
+    amount: Amount
+    spent: Spent
+    remaining: Remaining
+    month: Month
+    category: Category
+    user: User
+    created:
+      at: Created At

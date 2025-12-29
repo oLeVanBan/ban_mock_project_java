@@ -6,6 +6,8 @@ import com.sunasterisk.expense_management.dto.budgettemplate.BudgetTemplateReque
 import com.sunasterisk.expense_management.dto.budgettemplate.BudgetTemplateResponse;
 import com.sunasterisk.expense_management.service.BudgetTemplateService;
 import com.sunasterisk.expense_management.service.CategoryService;
+import com.sunasterisk.expense_management.service.CsvExportService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -22,13 +24,16 @@ public class AdminBudgetTemplateController extends BaseAdminController {
 
     private final BudgetTemplateService budgetTemplateService;
     private final CategoryService categoryService;
+    private final CsvExportService csvExportService;
 
     public AdminBudgetTemplateController(BudgetTemplateService budgetTemplateService,
                                          CategoryService categoryService,
+                                         CsvExportService csvExportService,
                                          MessageSource messageSource) {
         super(messageSource);
         this.budgetTemplateService = budgetTemplateService;
         this.categoryService = categoryService;
+        this.csvExportService = csvExportService;
     }
 
     @GetMapping("/budget-templates")
@@ -153,5 +158,17 @@ public class AdminBudgetTemplateController extends BaseAdminController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return redirectToIndex(MODULE);
+    }
+
+    /**
+     * Export budgets to CSV
+     */
+    @GetMapping("/budgets/export")
+    public void exportBudgets(HttpServletResponse response) {
+        try {
+            csvExportService.exportBudgets(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to export budgets: " + e.getMessage(), e);
+        }
     }
 }
